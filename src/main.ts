@@ -1,9 +1,9 @@
 import '@babel/polyfill'
 import Vue from 'vue'
-import './plugins/vuetify'
+import '@/plugins/vuetify'
 import App from './App.vue'
-import './registerServiceWorker'
-import './assets/app.scss'
+import '@/registerServiceWorker'
+import '@/assets/app.scss'
 
 Vue.config.productionTip = false
 
