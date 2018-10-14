@@ -27,12 +27,15 @@ export default class UserInputs extends Vue {
   @Prop({ type: Object as () => Stats })
   stats!: Stats
 
+  @Prop(String)
+  gender!: string
+
   // Add the measurement unit to the lift label
   label(tag: string): string {
     return tag + (this.useKilos ? ' (kg)' : ' (lbs)')
   }
 
-  @Emit('liftsUpdated')
+  @Emit('update:stats')
   updateStats(stat: string, payload: string): Stats {
     return { ...this.stats, [stat]: +payload }
   }

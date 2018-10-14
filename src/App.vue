@@ -4,9 +4,9 @@
     <v-content>
       <v-container fluid>
         <UserInputs 
-          :useKilos="useKilos" 
-          :stats="stats" 
-          @liftsUpdated="stats = $event" 
+          :useKilos="useKilos"
+          :stats.sync="stats"
+          :gender.sync="gender"
         />
         <LiftProportions />
         <LiftRank />
@@ -31,6 +31,7 @@ import Stats from '@/models/Stats'
 })
 export default class App extends Vue {
   useKilos: boolean = true
+  gender: string = 'male'
 
   stats: Stats = {
     bodyweight: 90,
