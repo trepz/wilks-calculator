@@ -1,10 +1,10 @@
-import Vue from 'vue';
-import App from './App.vue';
-import './registerServiceWorker';
-import './assets/app.scss';
+import Vue from 'vue'
+import App from './App.vue'
+import './registerServiceWorker'
+import './assets/app.scss'
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 new Vue({
   render: (h) => h(App),
-}).$mount('#app');
+}).$mount('#app')
