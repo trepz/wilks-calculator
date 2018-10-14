@@ -1,10 +1,15 @@
 <template>
-  <div id="app">
-    <TopBar />
-    <UserInputs />
-    <LiftProportions />
-    <LiftRank />
-  </div>
+  <v-app>
+    <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
+    <v-content>
+      <v-container fluid>
+        <UserInputs />
+        <LiftProportions />
+        <LiftRank />
+      </v-container>
+    </v-content>
+    <v-footer app></v-footer>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -19,5 +24,7 @@ import LiftRank from '@/components/LiftRank.vue'
     TopBar, UserInputs, LiftProportions, LiftRank,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  useKilos: boolean = true
+}
 </script>
