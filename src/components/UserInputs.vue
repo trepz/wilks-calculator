@@ -2,6 +2,13 @@
   <v-layout align-center justify-center row fill-height>
     <v-flex xs12 md6>
       <v-form>
+        <!-- Gender radio input -->
+        <v-radio-group :value="gender" @change="updateGender" row>
+          <v-radio label="Male" value="male"></v-radio>
+          <v-radio label="Female" value="female"></v-radio>
+          <span><!-- Empty span fixes alignment bug --></span>
+        </v-radio-group>
+        <!-- Stats number inputs -->
         <v-text-field
           v-for="stat in Object.keys(stats)"
           :key="stat"
@@ -38,6 +45,11 @@ export default class UserInputs extends Vue {
   @Emit('update:stats')
   updateStats(stat: string, payload: string): Stats {
     return { ...this.stats, [stat]: +payload }
+  }
+
+  @Emit('update:gender')
+  updateGender(payload: string): string {
+    return payload
   }
 }
 </script>
