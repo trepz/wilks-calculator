@@ -18,6 +18,7 @@ import TopBar from '@/components/TopBar.vue'
 import UserInputs from '@/components/UserInputs.vue'
 import LiftProportions from '@/components/LiftProportions.vue'
 import LiftRank from '@/components/LiftRank.vue'
+import Lifts from '@/models/Lifts'
 
 @Component({
   components: {
@@ -27,7 +28,7 @@ import LiftRank from '@/components/LiftRank.vue'
 export default class App extends Vue {
   useKilos: boolean = true
 
-  lifts: object = {
+  lifts: Lifts = {
     squat: 0,
     bench: 0,
     deadlift: 0,

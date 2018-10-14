@@ -17,14 +17,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
+import Lifts from '@/models/Lifts'
 
 @Component
 export default class UserInputs extends Vue {
   @Prop(Boolean)
   useKilos!: boolean
 
-  @Prop(Object)
-  lifts!: object
+  @Prop({ type: Object as () => Lifts })
+  lifts!: Lifts
 
   // Add the measurement unit to the lift label
   label(tag: string): string {
@@ -32,7 +33,7 @@ export default class UserInputs extends Vue {
   }
 
   @Emit('liftsUpdated')
-  updateLifts(lift: string, payload: string): object {
+  updateLifts(lift: string, payload: string): Lifts {
     return { ...this.lifts, [lift]: +payload }
   }
 }
