@@ -3,7 +3,7 @@
     <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
     <v-content>
       <v-container fluid>
-        <UserInputs :useKilos="useKilos" :lifts="lifts" />
+        <UserInputs :useKilos="useKilos" :lifts="lifts" @liftsUpdated="lifts = $event" />
         <LiftProportions />
         <LiftRank />
       </v-container>
