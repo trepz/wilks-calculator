@@ -3,7 +3,11 @@
     <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
     <v-content>
       <v-container fluid>
-        <UserInputs :useKilos="useKilos" :lifts="lifts" @liftsUpdated="lifts = $event" />
+        <UserInputs 
+          :useKilos="useKilos" 
+          :stats="stats" 
+          @liftsUpdated="stats = $event" 
+        />
         <LiftProportions />
         <LiftRank />
       </v-container>
@@ -18,7 +22,7 @@ import TopBar from '@/components/TopBar.vue'
 import UserInputs from '@/components/UserInputs.vue'
 import LiftProportions from '@/components/LiftProportions.vue'
 import LiftRank from '@/components/LiftRank.vue'
-import Lifts from '@/models/Lifts'
+import Stats from '@/models/Stats'
 
 @Component({
   components: {
@@ -28,7 +32,8 @@ import Lifts from '@/models/Lifts'
 export default class App extends Vue {
   useKilos: boolean = true
 
-  lifts: Lifts = {
+  stats: Stats = {
+    bodyweight: 90,
     squat: 0,
     bench: 0,
     deadlift: 0,

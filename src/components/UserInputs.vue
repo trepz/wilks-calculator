@@ -3,12 +3,12 @@
     <v-flex xs12 md6>
       <v-form>
         <v-text-field
-          v-for="lift in Object.keys(lifts)"
-          :key="lift"
+          v-for="stat in Object.keys(stats)"
+          :key="stat"
           type="number"
-          :value="lifts[lift] || ''"
-          @input="updateLifts(lift, $event)"
-          :label="label(lift)"
+          :value="stats[stat] || ''"
+          @input="updateStats(stat, $event)"
+          :label="label(stat)"
         ></v-text-field>
       </v-form>
     </v-flex>
@@ -17,15 +17,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import Lifts from '@/models/Lifts'
+import Stats from '@/models/Stats'
 
 @Component
 export default class UserInputs extends Vue {
   @Prop(Boolean)
   useKilos!: boolean
 
-  @Prop({ type: Object as () => Lifts })
-  lifts!: Lifts
+  @Prop({ type: Object as () => Stats })
+  stats!: Stats
 
   // Add the measurement unit to the lift label
   label(tag: string): string {
@@ -33,8 +33,8 @@ export default class UserInputs extends Vue {
   }
 
   @Emit('liftsUpdated')
-  updateLifts(lift: string, payload: string): Lifts {
-    return { ...this.lifts, [lift]: +payload }
+  updateStats(stat: string, payload: string): Stats {
+    return { ...this.stats, [stat]: +payload }
   }
 }
 </script>
