@@ -3,7 +3,7 @@
     <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
     <v-content>
       <v-container fluid>
-        <UserInputs />
+        <UserInputs :useKilos="useKilos" :lifts="lifts" />
         <LiftProportions />
         <LiftRank />
       </v-container>
@@ -26,5 +26,11 @@ import LiftRank from '@/components/LiftRank.vue'
 })
 export default class App extends Vue {
   useKilos: boolean = true
+
+  lifts: object = {
+    squat: 0,
+    bench: 0,
+    deadlift: 0,
+  }
 }
 </script>
