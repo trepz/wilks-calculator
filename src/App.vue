@@ -42,6 +42,11 @@ export default class App extends Vue {
     { name: 'deadlift', value: 0 },
   ]
 
+  get normalisedStats(): Stat[] {
+    if (this.useKilos) return this.stats
+    return this.stats.map((stat: Stat) => ({ ...stat, value: convert.toKgs(stat.value) }))
+  }
+
   @Watch('useKilos')
   convertStats(): void {
     this.stats = this.stats.map((stat: Stat) => {
