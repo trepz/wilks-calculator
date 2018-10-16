@@ -3,7 +3,7 @@
     <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
     <v-content>
       <v-container fluid>
-        <UserInputs 
+        <UserInputs
           :useKilos="useKilos"
           :stats.sync="stats"
           :gender.sync="gender"
@@ -17,12 +17,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import * as convert from '@/lib/convert'
+
 import TopBar from '@/components/TopBar.vue'
 import UserInputs from '@/components/UserInputs.vue'
 import LiftProportions from '@/components/LiftProportions.vue'
 import LiftRank from '@/components/LiftRank.vue'
-import Stats from '@/models/Stats'
+import Stat from '@/models/Stat'
 
 @Component({
   components: {
@@ -33,12 +35,12 @@ export default class App extends Vue {
   useKilos: boolean = true
   gender: string = 'male'
 
-  stats: Stats = {
-    bodyweight: 90,
-    squat: 0,
-    bench: 0,
-    deadlift: 0,
-  }
+  stats: Stat[] = [
+    { name: 'bodyweight', value: 90 },
+    { name: 'squat', value: 0 },
+    { name: 'bench', value: 0 },
+    { name: 'deadlift', value: 0 },
+  ]
 }
 
 const equationValues = {

@@ -10,12 +10,12 @@
         </v-radio-group>
         <!-- Stats number inputs -->
         <v-text-field
-          v-for="stat in Object.keys(stats)"
-          :key="stat"
+          v-for="(stat, index) in stats"
+          :key="index"
           type="number"
-          :value="stats[stat] || ''"
-          @input="updateStats(stat, $event)"
-          :label="label(stat)"
+          :value="stat.value"
+          @input="updateStats(index, $event)"
+          :label="label(stat.name)"
         ></v-text-field>
       </v-form>
     </v-flex>
@@ -24,15 +24,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import Stats from '@/models/Stats'
+import Stat from '@/models/Stat'
 
 @Component
 export default class UserInputs extends Vue {
   @Prop(Boolean)
   useKilos!: boolean
 
-  @Prop({ type: Object as () => Stats })
-  stats!: Stats
+  @Prop(Array)
+  stats!: Stat[]
 
   @Prop(String)
   gender!: string
@@ -43,8 +43,8 @@ export default class UserInputs extends Vue {
   }
 
   @Emit('update:stats')
-  updateStats(stat: string, payload: string): Stats {
-    return { ...this.stats, [stat]: +payload }
+  updateStats(index: number, payload: string): Stat[] {
+    return this.stats.map((stat: Stat, i: number) => i === index ? { ...stat, value: +payload } : stat)
   }
 
   @Emit('update:gender')
