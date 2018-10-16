@@ -41,6 +41,14 @@ export default class App extends Vue {
     { name: 'bench', value: 0 },
     { name: 'deadlift', value: 0 },
   ]
+
+  @Watch('useKilos')
+  convertStats(): void {
+    this.stats = this.stats.map((stat: Stat) => {
+      const value = this.useKilos ? convert.toKgs(stat.value) : convert.toLbs(stat.value)
+      return { ...stat, value }
+    })
+  }
 }
 
 const equationValues = {
