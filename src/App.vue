@@ -33,7 +33,7 @@ import Stat from '@/models/Stat'
 })
 export default class App extends Vue {
   useKilos: boolean = true
-  gender: string = 'male'
+  gender: 'male' | 'female' = 'male'
 
   stats: Stat[] = [
     { name: 'bodyweight', value: 90 },
@@ -47,6 +47,16 @@ export default class App extends Vue {
     return this.stats.map((stat: Stat) => ({ ...stat, value: convert.toKgs(stat.value) }))
   }
 
+  get statsWilks(): Stat[] {
+    const stats = this.normalisedStats
+    const eq = equationValues[this.gender]
+    const bw = stats[0].value
+    const fstats = stats.filter((x) => x.name !== 'bodyweight')
+    const total = fstats.reduce((a, c) => a += c.value, 0)
+
+    return fstats.map((x) => ({ name: x.name, value: calcWilksScore(x.value, bw, eq) }))
+  }
+
   @Watch('useKilos')
   convertStats(): void {
     this.stats = this.stats.map((stat: Stat) => {
@@ -54,6 +64,14 @@ export default class App extends Vue {
       return { ...stat, value }
     })
   }
+}
+
+const calcWilksScore = (lift: number, bodyweight: number, eqVals: any): number => {
+  const p = Math.pow
+  const w = bodyweight
+  const { a, b, c, d, e , f } = eqVals
+  const coeff = (500 / (a + b * w + c * p(w, 2) + d * p(w, 3) + e * p(w, 4) + f * p(w, 5)))
+  return lift * coeff
 }
 
 const equationValues = {
