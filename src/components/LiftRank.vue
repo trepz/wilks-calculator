@@ -1,8 +1,8 @@
 <template>
   <div>
-    <strong>TOTAL: {{ total.toFixed(2) }}</strong>
+    <strong>TOTAL: {{ total.toFixed(2) }} - {{ rank({ name: 'total', value: total }) }}</strong>
     <div v-for="stat in stats" :key="stat.name">
-      {{ stat.name }}: {{ stat.value.toFixed(2) }}
+      {{ stat.name }}: {{ stat.value.toFixed(2) }} - {{ rank(stat) }}
     </div>
   </div>
 </template>
