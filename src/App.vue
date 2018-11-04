@@ -35,6 +35,10 @@ export default class App extends Vue {
   useKilos: boolean = true
   gender: 'male' | 'female' = 'male'
 
+  /**
+   * List of user stats available as inputs. The first stat
+   * needs to be bodyweight.
+   */
   stats: Stat[] = [
     { name: 'bodyweight', value: 90 },
     { name: 'squat', value: 0 },
@@ -42,12 +46,21 @@ export default class App extends Vue {
     { name: 'deadlift', value: 0 },
   ]
 
+  /**
+   * Returns all the stats in kilograms.
+   */
   get normalisedStats(): Stat[] {
     return this.useKilos
       ? this.stats
       : this.stats.map((stat: Stat) => ({ ...stat, value: convert.toKgs(stat.value) }))
   }
 
+  /**
+   * Calculate the wilks score of all the users inputs.
+   * 
+   * Returns an array of stats with bodyweight removed, and adds
+   * a new stat which acts as the total of all the other stats.
+   */
   get statsWilks(): Stat[] {
     const stats = this.normalisedStats
     const eq = equationValues[this.gender]
@@ -58,6 +71,10 @@ export default class App extends Vue {
     return fstats.map((x) => ({ name: x.name, value: calcWilksScore(x.value, bw, eq) }))
   }
 
+  /**
+   * Convert the measurement units for all current inputs when the
+   * 'useKilos' value is changed.
+   */
   @Watch('useKilos')
   convertStats(): void {
     this.stats = this.stats.map((stat: Stat) => {
@@ -67,6 +84,9 @@ export default class App extends Vue {
   }
 }
 
+/**
+ * The actual wilks score calculation.
+ */
 const calcWilksScore = (lift: number, bodyweight: number, eqVals: any): number => {
   const p = Math.pow
   const w = bodyweight
@@ -75,6 +95,9 @@ const calcWilksScore = (lift: number, bodyweight: number, eqVals: any): number =
   return lift * coeff
 }
 
+/**
+ * Equation values for calculating wilks score depending on gender.
+ */
 const equationValues = {
   male: {
     a: -216.0475144,
