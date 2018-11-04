@@ -16,6 +16,7 @@
     "object-literal-sort-keys": false,
     "no-consecutive-blank-lines": false,
     "semicolon": [true, "never"],
-    "member-access": false
+    "member-access": false,
+    "curly": false
   }
 }
