@@ -14,5 +14,9 @@ import { Stat } from '@/models/Stat'
 export default class LiftRank extends Vue {
   @Prop(Array)
   stats!: Stat[]
+
+  get total(): number {
+    return this.stats.reduce((a, c) => a += c.value, 0)
+  }
 }
 </script>

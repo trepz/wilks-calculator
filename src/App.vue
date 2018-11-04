@@ -64,7 +64,6 @@ export default class App extends Vue {
     const eq = equationValues[this.gender]
     const bw = stats[0].value
     const fstats = stats.filter((x) => x.name !== 'bodyweight')
-    const total = fstats.reduce((a, c) => a += c.value, 0)
 
     return fstats.map((x) => ({ name: x.name, value: calcWilksScore(x.value, bw, eq) }))
   }
