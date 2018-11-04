@@ -8,7 +8,6 @@
           :stats.sync="stats"
           :gender.sync="gender"
         />
-        <LiftProportions />
         <LiftRank :stats="statsWilks" />
       </v-container>
     </v-content>
@@ -22,13 +21,12 @@ import * as convert from '@/lib/convert'
 
 import TopBar from '@/components/TopBar.vue'
 import UserInputs from '@/components/UserInputs.vue'
-import LiftProportions from '@/components/LiftProportions.vue'
 import LiftRank from '@/components/LiftRank.vue'
 import { Stat } from '@/models/Stat'
 
 @Component({
   components: {
-    TopBar, UserInputs, LiftProportions, LiftRank,
+    TopBar, UserInputs, LiftRank,
   },
 })
 export default class App extends Vue {
