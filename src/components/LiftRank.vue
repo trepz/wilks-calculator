@@ -1,7 +1,8 @@
 <template>
   <div>
+    <strong>TOTAL: {{ total.toFixed(2) }}</strong>
     <div v-for="stat in stats" :key="stat.name">
-      {{ stat.name }}: {{ stat.value }}
+      {{ stat.name }}: {{ stat.value.toFixed(2) }}
     </div>
   </div>
 </template>
