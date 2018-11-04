@@ -9,7 +9,7 @@
           :gender.sync="gender"
         />
         <LiftProportions />
-        <LiftRank />
+        <LiftRank :stats="statsWilks" />
       </v-container>
     </v-content>
     <v-footer app></v-footer>
@@ -57,9 +57,7 @@ export default class App extends Vue {
 
   /**
    * Calculate the wilks score of all the users inputs.
-   *
-   * Returns an array of stats with bodyweight removed, and adds
-   * a new stat which acts as the total of all the other stats.
+   * Returns an array of stats with bodyweight removed and the value replaced with the wilks score.
    */
   get statsWilks(): Stat[] {
     const stats = this.normalisedStats
