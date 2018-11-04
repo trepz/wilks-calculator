@@ -43,8 +43,9 @@ export default class App extends Vue {
   ]
 
   get normalisedStats(): Stat[] {
-    if (this.useKilos) return this.stats
-    return this.stats.map((stat: Stat) => ({ ...stat, value: convert.toKgs(stat.value) }))
+    return this.useKilos
+      ? this.stats
+      : this.stats.map((stat: Stat) => ({ ...stat, value: convert.toKgs(stat.value) }))
   }
 
   get statsWilks(): Stat[] {
