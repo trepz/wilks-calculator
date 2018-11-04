@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
-import Stat from '@/models/Stat'
+import { Stat } from '@/models/Stat'
 
 @Component
 export default class UserInputs extends Vue {

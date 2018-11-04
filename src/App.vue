@@ -24,7 +24,7 @@ import TopBar from '@/components/TopBar.vue'
 import UserInputs from '@/components/UserInputs.vue'
 import LiftProportions from '@/components/LiftProportions.vue'
 import LiftRank from '@/components/LiftRank.vue'
-import Stat from '@/models/Stat'
+import { Stat } from '@/models/Stat'
 
 @Component({
   components: {

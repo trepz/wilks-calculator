@@ -1,4 +1,4 @@
-export default interface Stat {
+export interface Stat {
     name: string
     value: number
 }
