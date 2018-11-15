@@ -2,13 +2,19 @@
   <v-app>
     <TopBar :useKilos="useKilos" @unitChange="useKilos = $event" />
     <v-content>
-      <v-container fluid>
-        <UserInputs
-          :useKilos="useKilos"
-          :stats.sync="stats"
-          :gender.sync="gender"
-        />
-        <LiftRank :stats="statsWilks" />
+      <v-container>
+        <v-layout align-center justify-center row fill-height wrap>
+          <v-flex align-center sm6 xs12>
+            <UserInputs
+              :useKilos="useKilos"
+              :stats.sync="stats"
+              :gender.sync="gender"
+            />
+          </v-flex>
+          <v-flex sm6 xs12>
+            <LiftRank :stats="statsWilks" />
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-content>
     <v-footer app></v-footer>

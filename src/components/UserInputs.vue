@@ -1,25 +1,21 @@
 <template>
-  <v-layout align-center justify-center row fill-height>
-    <v-flex xs12 md6>
-      <v-form>
-        <!-- Gender radio input -->
-        <v-radio-group :value="gender" @change="updateGender" row>
-          <v-radio label="Male" value="male"></v-radio>
-          <v-radio label="Female" value="female"></v-radio>
-          <span><!-- Empty span fixes alignment bug --></span>
-        </v-radio-group>
-        <!-- Stats number inputs -->
-        <v-text-field
-          v-for="(stat, index) in stats"
-          :key="index"
-          type="number"
-          :value="stat.value"
-          @input="updateStats(index, $event)"
-          :label="label(stat.name)"
-        ></v-text-field>
-      </v-form>
-    </v-flex>
-  </v-layout>
+  <v-form>
+    <!-- Gender radio input -->
+    <v-radio-group :value="gender" @change="updateGender" row>
+      <v-radio label="Male" value="male"></v-radio>
+      <v-radio label="Female" value="female"></v-radio>
+      <span><!-- Empty span fixes alignment bug --></span>
+    </v-radio-group>
+    <!-- Stats number inputs -->
+    <v-text-field
+      v-for="(stat, index) in stats"
+      :key="index"
+      type="number"
+      :value="stat.value"
+      @input="updateStats(index, $event)"
+      :label="label(stat.name)"
+    ></v-text-field>
+  </v-form>
 </template>
 
 <script lang="ts">
