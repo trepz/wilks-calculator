@@ -11,7 +11,7 @@
       v-for="(stat, index) in stats"
       :key="index"
       type="number"
-      :value="stat.value"
+      :value="stat.value || ''"
       @input="updateStats(index, $event)"
       :label="label(stat.name)"
     ></v-text-field>
