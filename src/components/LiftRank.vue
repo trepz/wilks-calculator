@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <strong>TOTAL: {{ total.toFixed(2) }} - {{ rank({ name: 'total', value: total }) }}</strong>
-    <div v-for="stat in stats" :key="stat.name">
-      {{ stat.name }}: {{ stat.value.toFixed(2) }} - {{ rank(stat) }}
-    </div>
-  </div>
+  <v-container>
+
+    <v-layout row wrap justify-center="">
+      <v-flex xs12 mb-4>
+        <strong class="display-1">WILKS: {{ total.toFixed(2) }}</strong><br>
+        <span class="subheading">{{ rank({ name: 'total', value: total }) }}</span>
+      </v-flex>
+
+      <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name" v-if="stat.value > 0">
+        {{ stat.name }}: {{ stat.value.toFixed(2) }}<br>
+        <small>{{ rank(stat) }}</small>
+      </v-flex>
+    </v-layout>
+
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -45,8 +54,8 @@ export default class LiftRank extends Vue {
     if (score < 300) return 'Low Intermediate'
     if (score < 350) return 'Intermediate'
     if (score < 400) return 'High Intermediate'
-    if (score < 425) return 'Advanced (locally competitive)'
-    if (score < 450) return 'High Advanced (nationally competitive)'
+    if (score < 425) return 'Advanced'
+    if (score < 450) return 'High Advanced'
     if (score < 475) return 'Elite'
     if (score < 525) return 'International Elite'
     if (score < 575) return 'World Class'

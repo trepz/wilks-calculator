@@ -3,29 +3,24 @@
     <v-toolbar-title>Wilks Calculator</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-switch
-        :label="`Units: ${useKilos ? 'KG' : 'LBS'}`"
-        v-model="units"
-        color="deep-purple lighten-5"
-      ></v-switch>
+      <v-btn flat @click="toggleUnits">
+        Switch to {{ useKilos ? 'LBS' : 'KG' }}
+      </v-btn>
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 
 @Component
 export default class TopBar extends Vue {
   @Prop({ type: Boolean, default: true })
   useKilos: boolean = true
 
-  get units() {
-    return this.useKilos
-  }
-  set units(val) {
-    this.$emit('unitChange', !this.useKilos)
+  @Emit('unitChange')
+  toggleUnits() {
+    return !this.useKilos
   }
 }
 </script>
-
