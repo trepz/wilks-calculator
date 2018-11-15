@@ -1,5 +1,7 @@
 # wilks-calculator
 
+https://wilks.polr.io
+
 A simple wilks calculator that also grades your score and ranks your lifts proportionally.
 
 ## Project setup
