@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <strong>TOTAL: {{ total.toFixed(2) }} - {{ rank({ name: 'total', value: total }) }}</strong>
-    <div v-for="stat in stats" :key="stat.name">
-      {{ stat.name }}: {{ stat.value.toFixed(2) }} - {{ rank(stat) }}
-    </div>
-  </div>
+  <v-container>
+
+    <v-layout row wrap justify-center="">
+      <v-flex xs12 mb-4>
+        <strong class="display-1">WILKS: {{ total.toFixed(2) }}</strong><br>
+        <span class="subheading">({{ rank({ name: 'total', value: total }) }})</span>
+      </v-flex>
+
+      <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name">
+        {{ stat.name }}: {{ stat.value.toFixed(2) }}<br>
+        <small>({{ rank(stat) }})</small>
+      </v-flex>
+    </v-layout>
+
+  </v-container>
 </template>
 
 <script lang="ts">
