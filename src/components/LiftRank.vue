@@ -7,7 +7,7 @@
         <span class="subheading">{{ rank({ name: 'total', value: total }) }}</span>
       </v-flex>
 
-      <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name">
+      <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name" v-if="stat.value > 0">
         {{ stat.name }}: {{ stat.value.toFixed(2) }}<br>
         <small>{{ rank(stat) }}</small>
       </v-flex>
