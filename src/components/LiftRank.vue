@@ -4,12 +4,12 @@
     <v-layout row wrap justify-center="">
       <v-flex xs12 mb-4>
         <strong class="display-1">WILKS: {{ total.toFixed(2) }}</strong><br>
-        <span class="subheading">({{ rank({ name: 'total', value: total }) }})</span>
+        <span class="subheading">{{ rank({ name: 'total', value: total }) }}</span>
       </v-flex>
 
       <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name">
         {{ stat.name }}: {{ stat.value.toFixed(2) }}<br>
-        <small>({{ rank(stat) }})</small>
+        <small>{{ rank(stat) }}</small>
       </v-flex>
     </v-layout>
 
