@@ -1,6 +1,6 @@
 {
-  "name": "wilks-calculator",
-  "short_name": "wilks-calculator",
+  "name": "Wilks Calculator",
+  "short_name": "wilks",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",
