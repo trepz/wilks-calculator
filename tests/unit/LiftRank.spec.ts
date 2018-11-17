@@ -22,6 +22,26 @@ describe('Total wilks score', () => {
     const wrapper = shallowMount(LiftRank, { propsData: { stats: [s, b, d] }})
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
   })
+
+  it('gives a rank based on the lifts entered instead of always using full-power standards', () => {
+    const wrapper = shallowMount(LiftRank, { propsData: { stats: [b] }})
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('Advanced')
+
+    wrapper.setProps({ stats: [s] })
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('High Advanced')
+
+    wrapper.setProps({ stats: [d] })
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('International Elite')
+
+    wrapper.setProps({ stats: [s, b] })
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('Advanced')
+
+    wrapper.setProps({ stats: [s, d] })
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
+
+    wrapper.setProps({ stats: [b, d] })
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
+  })
 })
 
 describe('Individual lift scores', () => {
