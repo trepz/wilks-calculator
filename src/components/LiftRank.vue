@@ -2,13 +2,19 @@
   <v-container>
 
     <v-layout row wrap justify-center="">
-      <v-flex xs12 mb-4>
+      <v-flex xs12 mb-4 class="total-score">
         <strong class="display-1">WILKS: {{ total.toFixed(2) }}</strong><br>
         <span class="subheading">{{ rank({ name: 'total', value: total }) }}</span>
       </v-flex>
 
-      <v-flex sm3 xs12 mb-3 v-for="stat in stats" :key="stat.name" v-if="stat.value > 0">
-        {{ stat.name }}: {{ stat.value.toFixed(2) }}<br>
+      <v-flex 
+        sm3 xs12 mb-3 
+        v-for="stat in stats" 
+        :key="stat.name" 
+        v-if="stat.value > 0"
+        class="single-lift-score"
+      >
+        <span>{{ stat.name }}: {{ stat.value.toFixed(2) }}</span><br>
         <small>{{ rank(stat) }}</small>
       </v-flex>
     </v-layout>
