@@ -17,6 +17,11 @@ describe('Total wilks score', () => {
     const wrapper = shallowMount(LiftRank, { propsData: { stats: [s] }})
     expect(wrapper.find('.display-1').text()).toMatch('WILKS: 150')
   })
+
+  it('gives the user a rank based on wilks', () => {
+    const wrapper = shallowMount(LiftRank, { propsData: { stats: [s, b, d] }})
+    expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
+  })
 })
 
 describe('Individual lift scores', () => {
