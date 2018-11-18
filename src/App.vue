@@ -9,6 +9,7 @@
               :useKilos="useKilos"
               :stats.sync="stats"
               :gender.sync="gender"
+              :inputLifts.sync="inputLifts"
             />
           </v-flex>
           <v-flex sm6 xs12>
@@ -38,6 +39,7 @@ import { Stat } from '@/models/Stat'
 export default class App extends Vue {
   useKilos: boolean = true
   gender: 'male' | 'female' = 'male'
+  inputLifts: boolean = true // Input individual lifts as opposed to just the total
 
   /**
    * List of user stats available as inputs. The first stat
@@ -82,6 +84,17 @@ export default class App extends Vue {
       const value = this.useKilos ? convert.toKgs(stat.value) : convert.toLbs(stat.value)
       return { ...stat, value }
     })
+  }
+
+  /**
+   * Toggle between inputting lifts individually vs. inputting total directly.
+   */
+  @Watch('inputLifts')
+  toggleInputs() {
+    const newStats = this.inputLifts
+      ? [{ name: 'squat', value: 0 }, { name: 'bench', value: 0 }, { name: 'deadlift', value: 0 }]
+      : [{ name: 'total', value: 0 }]
+    this.stats = [this.stats[0], ...newStats]
   }
 }
 
