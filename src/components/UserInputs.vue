@@ -6,6 +6,7 @@
       <v-radio label="Female" value="female"></v-radio>
       <span><!-- Empty span fixes alignment bug --></span>
     </v-radio-group>
+
     <!-- Stats number inputs -->
     <v-text-field
       v-for="(stat, index) in stats"
@@ -15,6 +16,13 @@
       @input="updateStats(index, $event)"
       :label="label(stat.name)"
     ></v-text-field>
+
+    <!-- Toggle individual inputs / entering total directly -->
+    <v-checkbox
+      label="Input individual lifts."
+      :value="inputLifts"
+      @change="updateInputs"
+    ></v-checkbox>
   </v-form>
 </template>
 
@@ -33,6 +41,9 @@ export default class UserInputs extends Vue {
   @Prop(String)
   gender!: string
 
+  @Prop(Boolean)
+  inputLifts!: boolean
+
   // Add the measurement unit to the lift label
   label(tag: string): string {
     return tag + (this.useKilos ? ' (kg)' : ' (lbs)')
@@ -46,6 +57,11 @@ export default class UserInputs extends Vue {
   @Emit('update:gender')
   updateGender(payload: string): string {
     return payload
+  }
+
+  @Emit('update:inputLifts')
+  updateInputs(): boolean {
+    return !this.inputLifts
   }
 }
 </script>

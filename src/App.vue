@@ -9,6 +9,7 @@
               :useKilos="useKilos"
               :stats.sync="stats"
               :gender.sync="gender"
+              :inputLifts.sync="inputLifts"
             />
           </v-flex>
           <v-flex sm6 xs12>
@@ -38,6 +39,7 @@ import { Stat } from '@/models/Stat'
 export default class App extends Vue {
   useKilos: boolean = true
   gender: 'male' | 'female' = 'male'
+  inputLifts: boolean = true // Input individual lifts as opposed to just the total
 
   /**
    * List of user stats available as inputs. The first stat
