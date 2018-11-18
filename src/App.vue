@@ -85,6 +85,17 @@ export default class App extends Vue {
       return { ...stat, value }
     })
   }
+
+  /**
+   * Toggle between inputting lifts individually vs. inputting total directly.
+   */
+  @Watch('inputLifts')
+  toggleInputs() {
+    const newStats = this.inputLifts
+      ? [{ name: 'squat', value: 0 }, { name: 'bench', value: 0 }, { name: 'deadlift', value: 0 }]
+      : [{ name: 'total', value: 0 }]
+    this.stats = [this.stats[0], ...newStats]
+  }
 }
 
 /**
