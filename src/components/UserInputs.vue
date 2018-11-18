@@ -20,8 +20,7 @@
     <!-- Toggle individual inputs / entering total directly -->
     <v-checkbox
       label="Input individual lifts."
-      :value="inputLifts"
-      @change="updateInputs"
+      v-model="inputLiftsMode"
     ></v-checkbox>
   </v-form>
 </template>
@@ -59,9 +58,11 @@ export default class UserInputs extends Vue {
     return payload
   }
 
-  @Emit('update:inputLifts')
-  updateInputs(): boolean {
-    return !this.inputLifts
+  get inputLiftsMode(): boolean {
+    return this.inputLifts
+  }
+  set inputLiftsMode(input: boolean) {
+    this.$emit('update:inputLifts', !this.inputLifts)
   }
 }
 </script>
