@@ -7,11 +7,11 @@
         <span class="subheading">{{ rank(stats) }}</span>
       </v-flex>
 
-      <v-flex 
-        sm3 xs12 mb-3 
-        v-for="stat in stats" 
-        :key="stat.name" 
-        v-if="stat.value"
+      <v-flex
+        sm3 xs12 mb-3
+        v-for="stat in stats"
+        :key="stat.name"
+        v-if="stat.value && stat.name !== 'total'"
         class="single-lift-score"
       >
         <span>{{ stat.name }}: {{ stat.value.toFixed(2) }}</span><br>
