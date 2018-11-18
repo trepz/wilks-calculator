@@ -73,6 +73,7 @@ export default class LiftRank extends Vue {
     const score = stats.reduce((a, c) => a += c.value, 0)
     const offset = stats.reduce((a, c) => c.value ? a += offsetValues[c.name] : a, 0)
 
+    if (!offset) return score
     return score * (100 / offset)
   }
 }
