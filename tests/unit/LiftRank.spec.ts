@@ -27,19 +27,19 @@ describe('Total wilks score', () => {
     const wrapper = shallowMount(LiftRank, { propsData: { stats: [b] }})
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('Advanced')
 
-    wrapper.setProps({ stats: [s] })
+    wrapper.setProps({ stats: [s, { ...b, value: 0 }, { ...d, value: 0 }] })
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('High Advanced')
 
-    wrapper.setProps({ stats: [d] })
+    wrapper.setProps({ stats: [d, { ...b, value: 0 }, { ...s, value: 0 }] })
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('International Elite')
 
-    wrapper.setProps({ stats: [s, b] })
+    wrapper.setProps({ stats: [s, b, { ...d, value: 0 }] })
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('Advanced')
 
-    wrapper.setProps({ stats: [s, d] })
+    wrapper.setProps({ stats: [s, d, { ...b, value: 0 }] })
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
 
-    wrapper.setProps({ stats: [b, d] })
+    wrapper.setProps({ stats: [b, d, { ...s, value: 0 }] })
     expect(wrapper.find('.total-score > .subheading').text()).toMatch('Elite')
   })
 })
