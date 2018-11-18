@@ -11,7 +11,7 @@
         sm3 xs12 mb-3 
         v-for="stat in stats" 
         :key="stat.name" 
-        v-if="stat.value > 0"
+        v-if="stat.value"
         class="single-lift-score"
       >
         <span>{{ stat.name }}: {{ stat.value.toFixed(2) }}</span><br>
@@ -71,7 +71,7 @@ export default class LiftRank extends Vue {
     }
 
     const score = stats.reduce((a, c) => a += c.value, 0)
-    const offset = stats.reduce((a, c) => a += offsetValues[c.name], 0)
+    const offset = stats.reduce((a, c) => c.value ? a += offsetValues[c.name] : a, 0)
 
     return score * (100 / offset)
   }
