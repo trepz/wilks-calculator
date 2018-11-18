@@ -63,4 +63,9 @@ describe('Individual lift scores', () => {
     expect(individualLifts).toHaveLength(1)
   })
 
+  it('does not render total as an individual lift', () => {
+    const wrapper = shallowMount(LiftRank, { propsData: { stats: [{ name: 'total', value: 500 }] }})
+    const individualLifts = wrapper.findAll('.single-lift-score')
+    expect(individualLifts).toHaveLength(0)
+  })
 })
