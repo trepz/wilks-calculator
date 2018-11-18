@@ -4,7 +4,7 @@
     <v-layout row wrap justify-center="">
       <v-flex xs12 mb-4 class="total-score">
         <strong class="display-1">WILKS: {{ total.toFixed(2) }}</strong><br>
-        <span class="subheading">{{ rank({ name: 'total', value: total }) }}</span>
+        <span class="subheading">{{ rank(stats) }}</span>
       </v-flex>
 
       <v-flex 
@@ -39,21 +39,9 @@ export default class LiftRank extends Vue {
    * Calculate the users estimated competitive level from their wilks score.
    * This is roughly based on a combination of the classic Russian grading
    * tables, the old USPA strength standards, and Greg Nuckols strength standards.
-   *
-   * Individual lifts are calculated based on the average % of the total, using a 35/25/40 ratio
-   * (this number comes from TSA's analysis of data from the IPF world championships).
    */
-  rank(stat: Stat): string {
-    const offset: any = {
-      squat: 100 / 35,
-      bench: 100 / 25,
-      deadlift: 100 / 40,
-    }
-
-    let score = stat.value
-    if (Object.keys(offset).includes(stat.name)) {
-      score *= offset[stat.name]
-    }
+  rank(stat: Stat | Stat[]): string {
+    const score = this.offsetWilks(Array.isArray(stat) ? stat : [stat])
 
     if (score < 150) return 'Untrained'
     if (score < 250) return 'Novice'
@@ -67,6 +55,25 @@ export default class LiftRank extends Vue {
     if (score < 575) return 'World Class'
     if (score < 750) return 'Among the GOAT'
     return 'Ok, you\'re just being dishonest now'
+  }
+
+  /**
+   * Multiply wilks score by an offset for finding the correct rank of individual or partial lifts.
+   *
+   * Individual lifts are calculated based on the average % of the total, using a 35/25/40 ratio
+   * (this number comes from TSA's analysis of data from the IPF world championships).
+   */
+  offsetWilks(stats: Stat[]): number {
+    const offsetValues: any = {
+      squat: 35,
+      bench: 25,
+      deadlift: 40,
+    }
+
+    const score = stats.reduce((a, c) => a += c.value, 0)
+    const offset = stats.reduce((a, c) => a += offsetValues[c.name], 0)
+
+    return score * (100 / offset)
   }
 }
 </script>
