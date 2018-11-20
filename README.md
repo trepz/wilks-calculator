@@ -1,5 +1,7 @@
 # wilks-calculator
 
+[![Build Status](https://travis-ci.org/trepz/wilks-calculator.svg?branch=master)](https://travis-ci.org/trepz/wilks-calculator)
+
 https://wilks.polr.io
 
 A simple wilks calculator that also grades your score and ranks your lifts proportionally.
