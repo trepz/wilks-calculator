@@ -102,10 +102,9 @@ export default class App extends Vue {
  * The actual wilks score calculation.
  */
 const calcWilksScore = (lift: number, bodyweight: number, eqVals: any): number => {
-  const p = Math.pow
   const w = bodyweight
   const { a, b, c, d, e , f } = eqVals
-  const coeff = (500 / (a + b * w + c * p(w, 2) + d * p(w, 3) + e * p(w, 4) + f * p(w, 5)))
+  const coeff = (500 / (a + b * w + c * w ** 2 + d * w ** 3 + e * w ** 4 + f * w ** 5))
   return lift * coeff
 }
 
