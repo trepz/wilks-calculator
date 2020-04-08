@@ -1,9 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Attributes exposing (style)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, input, text)
+import Html.Attributes exposing (placeholder, value)
+import Html.Events exposing (onClick, onInput)
 
 
 
@@ -27,6 +27,7 @@ main =
 type alias Model =
     { gender : Gender
     , units : Units
+    , total : Float
     }
 
 
@@ -44,6 +45,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
       , units = KG
+      , total = 0
       }
     , Cmd.none
     )
@@ -56,6 +58,7 @@ init _ =
 type Msg
     = ToggleGender
     | ToggleUnits
+    | UpdateTotal String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -87,6 +90,19 @@ update msg model =
             , Cmd.none
             )
 
+        UpdateTotal total ->
+            ( { model
+                | total =
+                    case String.toFloat total of
+                        Just n ->
+                            n
+
+                        Nothing ->
+                            0
+              }
+            , Cmd.none
+            )
+
 
 
 -- VIEW
@@ -95,28 +111,34 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ button
-            [ onClick ToggleUnits ]
-            [ text
-                (case model.units of
-                    KG ->
-                        "KG"
+        [ div []
+            [ button
+                [ onClick ToggleUnits ]
+                [ text
+                    (case model.units of
+                        KG ->
+                            "KG"
 
-                    LB ->
-                        "LBS"
-                )
-            ]
-        , button
-            [ onClick ToggleGender ]
-            [ text
-                (case model.gender of
-                    Male ->
-                        "Male"
+                        LB ->
+                            "LBS"
+                    )
+                ]
+            , button
+                [ onClick ToggleGender ]
+                [ text
+                    (case model.gender of
+                        Male ->
+                            "Male"
 
-                    Female ->
-                        "Female"
-                )
+                        Female ->
+                            "Female"
+                    )
+                ]
             ]
+        , div []
+            [ input [ placeholder "Total", onInput UpdateTotal ] [] ]
+        , div []
+            [ text ("nice total bro: " ++ String.fromFloat model.total) ]
         ]
 
 
