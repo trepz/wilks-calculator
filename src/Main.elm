@@ -99,7 +99,7 @@ update msg model =
             ( { model
                 | score =
                     computeScore
-                        OldWilks
+                        model.algorithm
                         model.gender
                         model.bodyweight
                         model.total
@@ -209,12 +209,37 @@ nameToAlgo name =
 
 computeScore : Algorithm -> Gender -> Float -> Float -> Float
 computeScore algo gender bodyweight total =
+    let
+        w =
+            bodyweight
+    in
     case algo of
+        Wilks ->
+            let
+                { a, b, c, d, e, f } =
+                    case gender of
+                        Male ->
+                            { a = -0.0000000078
+                            , b = 0.0000041543
+                            , c = -0.0006430507
+                            , d = -0.0126966343
+                            , e = 11.998275341
+                            , f = -82.5815609216
+                            }
+
+                        Female ->
+                            { a = -0.0000000071
+                            , b = 0.0000015978
+                            , c = 0.0003282035
+                            , d = -0.1389344062
+                            , e = 16.2595764612
+                            , f = -182.5406521018
+                            }
+            in
+            total * 500 / (a * w ^ 5 + b * w ^ 4 + c * w ^ 3 + d * w ^ 2 + e * w + f)
+
         OldWilks ->
             let
-                w =
-                    bodyweight
-
                 { a, b, c, d, e, f } =
                     case gender of
                         Male ->
