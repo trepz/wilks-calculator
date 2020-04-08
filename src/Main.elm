@@ -28,6 +28,7 @@ type alias Model =
     { gender : Gender
     , units : Units
     , total : Float
+    , score : Float
     }
 
 
@@ -41,11 +42,19 @@ type Units
     | KG
 
 
+type Algorithm
+    = Wilks
+    | OldWilks
+    | IPF
+    | Gloss
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
       , units = KG
       , total = 0
+      , score = 0
       }
     , Cmd.none
     )
@@ -59,29 +68,32 @@ type Msg
     = UpdateGender Gender
     | UpdateUnits Units
     | UpdateTotal String
+    | CalculateScore
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         UpdateGender gender ->
-            ( { model | gender = gender }, Cmd.none )
+            { model | gender = gender } |> update CalculateScore
 
         UpdateUnits units ->
             ( { model | units = units }, Cmd.none )
 
         UpdateTotal total ->
-            ( { model
-                | total =
+            let
+                t =
                     case String.toFloat total of
                         Just n ->
                             n
 
                         Nothing ->
                             0
-              }
-            , Cmd.none
-            )
+            in
+            { model | total = t } |> update CalculateScore
+
+        CalculateScore ->
+            ( { model | score = computeScore OldWilks model.gender 100 model.total }, Cmd.none )
 
 
 
@@ -109,6 +121,8 @@ view model =
             [ input [ placeholder "Total", onInput UpdateTotal ] [] ]
         , div []
             [ text ("nice total bro: " ++ String.fromFloat model.total) ]
+        , div []
+            [ text (algoName OldWilks ++ " score: " ++ String.fromFloat model.score) ]
         ]
 
 
@@ -119,3 +133,57 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
+
+
+
+-- UTILS
+
+
+algoName : Algorithm -> String
+algoName algo =
+    case algo of
+        Wilks ->
+            "Wilks"
+
+        OldWilks ->
+            "Wilks (old formula)"
+
+        IPF ->
+            "IPF"
+
+        Gloss ->
+            "Glossbrenner"
+
+
+computeScore : Algorithm -> Gender -> Float -> Float -> Float
+computeScore algo gender bodyweight total =
+    case algo of
+        OldWilks ->
+            let
+                w =
+                    bodyweight
+
+                { a, b, c, d, e, f } =
+                    case gender of
+                        Male ->
+                            { a = -216.0475144
+                            , b = 16.2606339
+                            , c = -0.002388645
+                            , d = -0.00113732
+                            , e = 7.01863e-6
+                            , f = -1.291e-8
+                            }
+
+                        Female ->
+                            { a = 594.31747775582
+                            , b = -27.23842536447
+                            , c = 0.82112226871
+                            , d = -0.00930733913
+                            , e = 4.731582e-5
+                            , f = -9.054e-8
+                            }
+            in
+            total * (500 / (a + b * w + c * w ^ 2 + d * w ^ 3 + e * w ^ 4 + f * w ^ 5))
+
+        _ ->
+            5.0
