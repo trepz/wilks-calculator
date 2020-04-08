@@ -1,8 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, input, text)
-import Html.Attributes exposing (placeholder)
+import Html exposing (Html, button, div, input, option, select, text)
+import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -27,6 +27,7 @@ main =
 type alias Model =
     { gender : Gender
     , units : Units
+    , algorithm : Algorithm
     , bodyweight : Float
     , total : Float
     , score : Float
@@ -54,6 +55,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
       , units = KG
+      , algorithm = Wilks
       , bodyweight = 90
       , total = 0
       , score = 0
@@ -69,6 +71,7 @@ init _ =
 type Msg
     = UpdateGender Gender
     | UpdateUnits Units
+    | UpdateAlgorithm Algorithm
     | UpdateBodyweight Float
     | UpdateTotal Float
     | CalculateScore
@@ -82,6 +85,9 @@ update msg model =
 
         UpdateUnits units ->
             ( { model | units = units }, Cmd.none )
+
+        UpdateAlgorithm algo ->
+            { model | algorithm = algo } |> update CalculateScore
 
         UpdateBodyweight amount ->
             { model | bodyweight = amount } |> update CalculateScore
@@ -122,6 +128,15 @@ view model =
 
                 Female ->
                     button [ onClick (UpdateGender Male) ] [ text "Female" ]
+            , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
+                (List.map
+                    (\f ->
+                        option
+                            [ value (algoToName f) ]
+                            [ text (algoToName f) ]
+                    )
+                    [ Wilks, IPF, OldWilks, Gloss ]
+                )
             ]
         , div []
             [ input [ placeholder "Bodyweight", onInput (UpdateBodyweight << floatOrZero) ] []
@@ -130,7 +145,7 @@ view model =
         , div []
             [ text ("nice total bro: " ++ String.fromFloat model.total) ]
         , div []
-            [ text (algoName OldWilks ++ " score: " ++ String.fromFloat model.score) ]
+            [ text (algoToName model.algorithm ++ " score: " ++ String.fromFloat model.score) ]
         ]
 
 
@@ -157,8 +172,8 @@ floatOrZero num =
             0
 
 
-algoName : Algorithm -> String
-algoName algo =
+algoToName : Algorithm -> String
+algoToName algo =
     case algo of
         Wilks ->
             "Wilks"
@@ -171,6 +186,25 @@ algoName algo =
 
         Gloss ->
             "Glossbrenner"
+
+
+nameToAlgo : String -> Algorithm
+nameToAlgo name =
+    case name of
+        "Wilks" ->
+            Wilks
+
+        "Wilks (old formula)" ->
+            OldWilks
+
+        "IPF" ->
+            IPF
+
+        "Glossbrenner" ->
+            Gloss
+
+        _ ->
+            Wilks
 
 
 computeScore : Algorithm -> Gender -> Float -> Float -> Float
