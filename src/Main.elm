@@ -27,6 +27,7 @@ main =
 type alias Model =
     { gender : Gender
     , units : Units
+    , bodyweight : Float
     , total : Float
     , score : Float
     }
@@ -53,6 +54,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
       , units = KG
+      , bodyweight = 90
       , total = 0
       , score = 0
       }
@@ -67,7 +69,8 @@ init _ =
 type Msg
     = UpdateGender Gender
     | UpdateUnits Units
-    | UpdateTotal String
+    | UpdateBodyweight Float
+    | UpdateTotal Float
     | CalculateScore
 
 
@@ -80,20 +83,23 @@ update msg model =
         UpdateUnits units ->
             ( { model | units = units }, Cmd.none )
 
-        UpdateTotal total ->
-            let
-                t =
-                    case String.toFloat total of
-                        Just n ->
-                            n
+        UpdateBodyweight amount ->
+            { model | bodyweight = amount } |> update CalculateScore
 
-                        Nothing ->
-                            0
-            in
-            { model | total = t } |> update CalculateScore
+        UpdateTotal total ->
+            { model | total = total } |> update CalculateScore
 
         CalculateScore ->
-            ( { model | score = computeScore OldWilks model.gender 100 model.total }, Cmd.none )
+            ( { model
+                | score =
+                    computeScore
+                        OldWilks
+                        model.gender
+                        model.bodyweight
+                        model.total
+              }
+            , Cmd.none
+            )
 
 
 
@@ -118,7 +124,9 @@ view model =
                     button [ onClick (UpdateGender Male) ] [ text "Female" ]
             ]
         , div []
-            [ input [ placeholder "Total", onInput UpdateTotal ] [] ]
+            [ input [ placeholder "Bodyweight", onInput (UpdateBodyweight << floatOrZero) ] []
+            , input [ placeholder "Total", onInput (UpdateTotal << floatOrZero) ] []
+            ]
         , div []
             [ text ("nice total bro: " ++ String.fromFloat model.total) ]
         , div []
@@ -137,6 +145,16 @@ subscriptions _ =
 
 
 -- UTILS
+
+
+floatOrZero : String -> Float
+floatOrZero num =
+    case String.toFloat num of
+        Just n ->
+            n
+
+        Nothing ->
+            0
 
 
 algoName : Algorithm -> String
@@ -186,4 +204,4 @@ computeScore algo gender bodyweight total =
             total * (500 / (a + b * w + c * w ^ 2 + d * w ^ 3 + e * w ^ 4 + f * w ^ 5))
 
         _ ->
-            5.0
+            0
