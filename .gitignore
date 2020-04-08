@@ -1,0 +1,9 @@
+# App artifacts
+dist
+.cache
+elm-stuff
+node_modules
+.vscode
+
+# Generated on crash by NPM
+yarn-debug.log

@@ -1,0 +1,17 @@
+{
+  "name": "wilks-calculator",
+  "version": "2.0.0",
+  "license": "GPLv3",
+  "private": true,
+  "devDependencies": {
+    "elm-hot": "^1.1.4",
+    "node-elm-compiler": "^5.0.4",
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "serve": "parcel index.html",
+    "debug": "parcel --debug index.html",
+    "build": "parcel build index.html",
+    "test": "elm-test"
+  }
+}
