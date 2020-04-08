@@ -262,5 +262,20 @@ computeScore algo gender bodyweight total =
             in
             total * (500 / (a + b * w + c * w ^ 2 + d * w ^ 3 + e * w ^ 4 + f * w ^ 5))
 
+        IPF ->
+            let
+                ln =
+                    logBase e
+
+                { a, b, c, d } =
+                    case gender of
+                        Male ->
+                            { a = 310.67, b = 857.785, c = 53.216, d = 147.0835 }
+
+                        Female ->
+                            { a = 125.1435, b = 228.03, c = 34.5246, d = 86.8301 }
+            in
+            500 + 100 * (total - (a * ln w - b)) / (c * ln w - d)
+
         _ ->
             0
