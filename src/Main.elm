@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, input, text)
-import Html.Attributes exposing (placeholder, value)
+import Html.Attributes exposing (placeholder)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -56,39 +56,19 @@ init _ =
 
 
 type Msg
-    = ToggleGender
-    | ToggleUnits
+    = UpdateGender Gender
+    | UpdateUnits Units
     | UpdateTotal String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ToggleGender ->
-            ( { model
-                | gender =
-                    case model.gender of
-                        Male ->
-                            Female
+        UpdateGender gender ->
+            ( { model | gender = gender }, Cmd.none )
 
-                        Female ->
-                            Male
-              }
-            , Cmd.none
-            )
-
-        ToggleUnits ->
-            ( { model
-                | units =
-                    case model.units of
-                        KG ->
-                            LB
-
-                        LB ->
-                            KG
-              }
-            , Cmd.none
-            )
+        UpdateUnits units ->
+            ( { model | units = units }, Cmd.none )
 
         UpdateTotal total ->
             ( { model
@@ -112,28 +92,18 @@ view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ button
-                [ onClick ToggleUnits ]
-                [ text
-                    (case model.units of
-                        KG ->
-                            "KG"
+            [ case model.units of
+                KG ->
+                    button [ onClick (UpdateUnits LB) ] [ text "KG" ]
 
-                        LB ->
-                            "LBS"
-                    )
-                ]
-            , button
-                [ onClick ToggleGender ]
-                [ text
-                    (case model.gender of
-                        Male ->
-                            "Male"
+                LB ->
+                    button [ onClick (UpdateUnits KG) ] [ text "LBS" ]
+            , case model.gender of
+                Male ->
+                    button [ onClick (UpdateGender Female) ] [ text "Male" ]
 
-                        Female ->
-                            "Female"
-                    )
-                ]
+                Female ->
+                    button [ onClick (UpdateGender Male) ] [ text "Female" ]
             ]
         , div []
             [ input [ placeholder "Total", onInput UpdateTotal ] [] ]
