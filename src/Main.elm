@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, p, text)
+import Html exposing (Html, button, div, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 
@@ -62,12 +62,28 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ToggleGender ->
-            ( model
+            ( { model
+                | gender =
+                    case model.gender of
+                        Male ->
+                            Female
+
+                        Female ->
+                            Male
+              }
             , Cmd.none
             )
 
         ToggleUnits ->
-            ( model
+            ( { model
+                | units =
+                    case model.units of
+                        KG ->
+                            LB
+
+                        LB ->
+                            KG
+              }
             , Cmd.none
             )
 
@@ -78,7 +94,30 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    p [] [ text "Wilks calculator" ]
+    div []
+        [ button
+            [ onClick ToggleUnits ]
+            [ text
+                (case model.units of
+                    KG ->
+                        "KG"
+
+                    LB ->
+                        "LBS"
+                )
+            ]
+        , button
+            [ onClick ToggleGender ]
+            [ text
+                (case model.gender of
+                    Male ->
+                        "Male"
+
+                    Female ->
+                        "Female"
+                )
+            ]
+        ]
 
 
 
