@@ -134,7 +134,7 @@ view model =
                             [ value (algoToName f) ]
                             [ text (algoToName f) ]
                     )
-                    [ Wilks, IPF, OldWilks, Gloss ]
+                    [ Wilks, IPF, OldWilks ]
                 )
             ]
         , div []
@@ -183,9 +183,6 @@ algoToName algo =
         IPF ->
             "IPF"
 
-        Gloss ->
-            "Glossbrenner"
-
 
 nameToAlgo : String -> Algorithm
 nameToAlgo name =
@@ -198,9 +195,6 @@ nameToAlgo name =
 
         "IPF" ->
             IPF
-
-        "Glossbrenner" ->
-            Gloss
 
         _ ->
             Wilks
