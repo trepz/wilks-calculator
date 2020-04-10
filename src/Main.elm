@@ -100,7 +100,18 @@ update msg model =
             { model | gender = gender } |> update CalculateScore
 
         UpdateUnits units ->
-            ( { model | units = units }, Cmd.none )
+            let
+                convert =
+                    convertWeight model.units units
+            in
+            ( { model
+                | units = units
+                , total = convert model.total
+                , bodyweight = convert model.bodyweight
+                , singleLifts = Dict.map (\_ v -> convert v) model.singleLifts
+              }
+            , Cmd.none
+            )
 
         UpdateAlgorithm algo ->
             { model | algorithm = algo } |> update CalculateScore
@@ -121,8 +132,8 @@ update msg model =
                     computeScore
                         model.algorithm
                         model.gender
-                        model.bodyweight
-                        (modeTotal model)
+                        (model.bodyweight |> convertWeight model.units KG)
+                        (modeTotal model |> convertWeight model.units KG)
               }
             , Cmd.none
             )
@@ -168,7 +179,12 @@ view model =
                     button [ onClick (UpdateMode Single) ] [ text "Input: Individual Lifts" ]
             ]
         , div []
-            [ input [ placeholder "Bodyweight", onInput (UpdateBodyweight << floatOrZero) ] []
+            [ input
+                [ placeholder "Bodyweight"
+                , value (String.fromFloat model.bodyweight)
+                , onInput (UpdateBodyweight << floatOrZero)
+                ]
+                []
             , case model.mode of
                 Single ->
                     div []
@@ -268,6 +284,28 @@ modeTotal model =
 
         Single ->
             model.singleLifts |> Dict.foldl (\_ n t -> n + t) 0
+
+
+convertWeight : Units -> Units -> Float -> Float
+convertWeight from to n =
+    if n == 0 then
+        0
+
+    else
+        case ( from, to ) of
+            ( LB, KG ) ->
+                roundToPlaces (n / 2.2046226218488) 2
+
+            ( KG, LB ) ->
+                roundToPlaces (n * 2.2046226218488) 2
+
+            _ ->
+                n
+
+
+roundToPlaces : Float -> Float -> Float
+roundToPlaces num places =
+    toFloat (round (num * places * 2)) / (places * 2)
 
 
 computeScore : Algorithm -> Gender -> Float -> Float -> Float
