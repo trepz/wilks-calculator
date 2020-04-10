@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, option, select, text)
 import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
@@ -30,7 +31,9 @@ type alias Model =
     , algorithm : Algorithm
     , bodyweight : Float
     , total : Float
+    , singleLifts : Dict String Float
     , score : Float
+    , mode : Mode
     }
 
 
@@ -50,6 +53,11 @@ type Algorithm
     | IPF
 
 
+type Mode
+    = Single
+    | Total
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
@@ -57,7 +65,14 @@ init _ =
       , algorithm = Wilks
       , bodyweight = 90
       , total = 0
+      , singleLifts =
+            Dict.fromList
+                [ ( "Squat", 0 )
+                , ( "Bench", 0 )
+                , ( "Deadlift", 0 )
+                ]
       , score = 0
+      , mode = Total
       }
     , Cmd.none
     )
@@ -73,7 +88,9 @@ type Msg
     | UpdateAlgorithm Algorithm
     | UpdateBodyweight Float
     | UpdateTotal Float
+    | UpdateLift String Float
     | CalculateScore
+    | UpdateMode Mode
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,6 +111,10 @@ update msg model =
         UpdateTotal total ->
             { model | total = total } |> update CalculateScore
 
+        UpdateLift lift amount ->
+            { model | singleLifts = Dict.insert lift amount model.singleLifts }
+                |> update CalculateScore
+
         CalculateScore ->
             ( { model
                 | score =
@@ -101,10 +122,13 @@ update msg model =
                         model.algorithm
                         model.gender
                         model.bodyweight
-                        model.total
+                        (modeTotal model)
               }
             , Cmd.none
             )
+
+        UpdateMode mode ->
+            { model | mode = mode } |> update CalculateScore
 
 
 
@@ -128,21 +152,57 @@ view model =
                 Female ->
                     button [ onClick (UpdateGender Male) ] [ text "Female" ]
             , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
-                (List.map
-                    (\f ->
-                        option
-                            [ value (algoToName f) ]
-                            [ text (algoToName f) ]
-                    )
-                    [ Wilks, IPF, OldWilks ]
+                ([ Wilks, IPF, OldWilks ]
+                    |> List.map
+                        (\f ->
+                            option
+                                [ value (algoToName f) ]
+                                [ text (algoToName f) ]
+                        )
                 )
+            , case model.mode of
+                Single ->
+                    button [ onClick (UpdateMode Total) ] [ text "Input: Total" ]
+
+                Total ->
+                    button [ onClick (UpdateMode Single) ] [ text "Input: Individual Lifts" ]
             ]
         , div []
             [ input [ placeholder "Bodyweight", onInput (UpdateBodyweight << floatOrZero) ] []
-            , input [ placeholder "Total", onInput (UpdateTotal << floatOrZero) ] []
+            , case model.mode of
+                Single ->
+                    div []
+                        (Dict.toList model.singleLifts
+                            |> List.map
+                                (\( name, val ) ->
+                                    input
+                                        [ placeholder name
+                                        , value (String.fromFloat val)
+                                        , onInput (UpdateLift name << floatOrZero)
+                                        ]
+                                        []
+                                )
+                        )
+
+                Total ->
+                    div []
+                        [ input
+                            [ placeholder "Total"
+                            , value (String.fromFloat model.total)
+                            , onInput (UpdateTotal << floatOrZero)
+                            ]
+                            []
+                        ]
             ]
         , div []
-            [ text ("nice total bro: " ++ String.fromFloat model.total) ]
+            [ text
+                (if model.mode == Single then
+                    "Total: " ++ String.fromFloat (modeTotal model)
+
+                 else
+                    ""
+                )
+            ]
         , div []
             [ text (algoToName model.algorithm ++ " score: " ++ String.fromFloat model.score) ]
         ]
@@ -198,6 +258,16 @@ nameToAlgo name =
 
         _ ->
             Wilks
+
+
+modeTotal : Model -> Float
+modeTotal model =
+    case model.mode of
+        Total ->
+            model.total
+
+        Single ->
+            model.singleLifts |> Dict.foldl (\_ n t -> n + t) 0
 
 
 computeScore : Algorithm -> Gender -> Float -> Float -> Float
