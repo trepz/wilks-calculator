@@ -128,7 +128,7 @@ update msg model =
             )
 
         UpdateMode mode ->
-            { model | mode = mode } |> update CalculateScore
+            { model | mode = mode, total = modeTotal model } |> update CalculateScore
 
 
 
