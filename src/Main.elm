@@ -305,7 +305,11 @@ convertWeight from to n =
 
 roundToPlaces : Float -> Float -> Float
 roundToPlaces num places =
-    toFloat (round (num * places * 2)) / (places * 2)
+    let
+        n =
+            10 ^ places
+    in
+    toFloat (round (num * n)) / n
 
 
 computeScore : Algorithm -> Gender -> Float -> Float -> Float
