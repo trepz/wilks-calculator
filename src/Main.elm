@@ -61,7 +61,8 @@ type Mode
 
 
 type SvgPathAction
-    = M Int Int
+    = Q Int Int Int Int
+    | M Int Int
     | L Int Int
     | Z
 
@@ -245,9 +246,9 @@ wave =
             [ path
                 [ d <|
                     toPath <|
-                        [ M 0 0
-                        , L 50 10
-                        , L 100 0
+                        [ M 0 50
+                        , Q 25 100 50 50
+                        , Q 75 0 100 50
                         , L 100 100
                         , L 0 100
                         , Z
@@ -276,6 +277,17 @@ toPath coords =
     List.foldl
         (\coord str ->
             case coord of
+                Q ax ay x y ->
+                    str
+                        ++ "Q"
+                        ++ String.fromInt ax
+                        ++ ","
+                        ++ String.fromInt ay
+                        ++ " "
+                        ++ String.fromInt x
+                        ++ ","
+                        ++ String.fromInt y
+
                 M x y ->
                     str ++ "M" ++ String.fromInt x ++ "," ++ String.fromInt y
 
