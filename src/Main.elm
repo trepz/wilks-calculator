@@ -60,6 +60,12 @@ type Mode
     | Total
 
 
+type SvgPathAction
+    = M Int Int
+    | L Int Int
+    | Z
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { gender = Male
@@ -236,7 +242,19 @@ wave =
     div [ class "wave" ]
         [ svg
             [ preserveAspectRatio "none", viewBox "0 0 100 100" ]
-            [ path [ d "M0,100L0,0L50,50L100,0L100,100Z" ] [] ]
+            [ path
+                [ d <|
+                    toPath <|
+                        [ M 0 0
+                        , L 50 10
+                        , L 100 0
+                        , L 100 100
+                        , L 0 100
+                        , Z
+                        ]
+                ]
+                []
+            ]
         ]
 
 
@@ -251,6 +269,24 @@ subscriptions _ =
 
 
 -- UTILS
+
+
+toPath : List SvgPathAction -> String
+toPath coords =
+    List.foldl
+        (\coord str ->
+            case coord of
+                M x y ->
+                    str ++ "M" ++ String.fromInt x ++ "," ++ String.fromInt y
+
+                L x y ->
+                    str ++ "L" ++ String.fromInt x ++ "," ++ String.fromInt y
+
+                Z ->
+                    str ++ "Z"
+        )
+        ""
+        coords
 
 
 floatOrZero : String -> Float
