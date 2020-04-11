@@ -1,2 +1,31 @@
 body
-  background-color #fff
+  font-family 'Roboto', sans-serif
+
+.header
+  background linear-gradient(to right, #007991, #78ffd6)
+  color #fff
+  font-size 20px
+  position relative
+  height 30vh
+  display flex
+  flex-direction columns
+  align-items center
+  justify-content center
+  &::before
+    content ''
+    position absolute
+    bottom 0
+    width 0
+    height 0
+    border-style solid
+    border-width 0 33px 33px 33px
+    border-color transparent transparent #fff transparent
+    left 50%
+    transform translateX(-50%)
+
+.score
+  font-size 75px
+  text-align center
+
+.formula
+  text-align center

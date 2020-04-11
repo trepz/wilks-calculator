@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, option, select, text)
-import Html.Attributes exposing (placeholder, value)
+import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -149,7 +149,13 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div []
+        [ div [ class "header" ]
+            [ div [ class "display" ]
+                [ div [ class "score" ] [ text <| String.fromFloat <| roundToPlaces model.score 2 ]
+                , div [ class "formula" ] [ text <| algoToName model.algorithm ]
+                ]
+            ]
+        , div [ class "section inputs" ]
             [ case model.units of
                 KG ->
                     button [ onClick (UpdateUnits LB) ] [ text "KG" ]
@@ -219,8 +225,6 @@ view model =
                     ""
                 )
             ]
-        , div []
-            [ text (algoToName model.algorithm ++ " score: " ++ String.fromFloat model.score) ]
         ]
 
 
