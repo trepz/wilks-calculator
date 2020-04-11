@@ -150,10 +150,11 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ class "header" ]
-            [ div [ class "display" ]
-                [ div [ class "score" ] [ text <| String.fromFloat <| roundToPlaces model.score 2 ]
-                , div [ class "formula" ] [ text <| algoToName model.algorithm ]
+            [ div [ class "header__display" ]
+                [ div [ class "header__score" ] [ text <| String.fromFloat <| roundToPlaces model.score 2 ]
+                , div [ class "header__formula" ] [ text <| algoToName model.algorithm ]
                 ]
+            , div [ class "wave" ] []
             ]
         , div [ class "section inputs" ]
             [ case model.units of
