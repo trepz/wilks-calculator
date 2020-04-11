@@ -5,6 +5,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, option, select, text)
 import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onClick, onInput)
+import Svg exposing (path, svg)
+import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
 
 
 
@@ -154,7 +156,7 @@ view model =
                 [ div [ class "header__score" ] [ text <| String.fromFloat <| roundToPlaces model.score 2 ]
                 , div [ class "header__formula" ] [ text <| algoToName model.algorithm ]
                 ]
-            , div [ class "wave" ] []
+            , wave
             ]
         , div [ class "section inputs" ]
             [ case model.units of
@@ -226,6 +228,15 @@ view model =
                     ""
                 )
             ]
+        ]
+
+
+wave : Html Msg
+wave =
+    div [ class "wave" ]
+        [ svg
+            [ preserveAspectRatio "none", viewBox "0 0 100 100" ]
+            [ path [ d "M0,100L0,0L50,50L100,0L100,100Z" ] [] ]
         ]
 
 
