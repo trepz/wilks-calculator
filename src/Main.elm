@@ -160,7 +160,18 @@ view model =
     div []
         [ div [ class "header" ]
             [ div [ class "header__display" ]
-                [ div [ class "header__score" ] [ text <| String.fromFloat <| roundToPlaces model.score 2 ]
+                [ div [ class "header__score" ]
+                    [ roundToPlaces model.score 2
+                        |> (\n ->
+                                if n < 0 then
+                                    0
+
+                                else
+                                    n
+                           )
+                        |> String.fromFloat
+                        |> text
+                    ]
                 , div [ class "header__formula" ] [ text <| algoToName model.algorithm ]
                 ]
             , wave
@@ -244,15 +255,15 @@ wave =
         [ svg
             [ preserveAspectRatio "none", viewBox "0 0 100 100" ]
             [ path
-                [ d <|
-                    toPath <|
-                        [ M 0 50
-                        , Q 25 100 50 50
-                        , Q 75 0 100 50
-                        , L 100 100
-                        , L 0 100
-                        , Z
-                        ]
+                [ [ M 0 50
+                  , Q 25 100 50 50
+                  , Q 75 0 100 50
+                  , L 100 100
+                  , L 0 100
+                  , Z
+                  ]
+                    |> toPath
+                    |> d
                 ]
                 []
             ]
