@@ -1,11 +1,31 @@
+// VARS
+
+
 offwhite = #f8f8f8
+primary = #e58c8a
+secondary = #eec0c6
+
+
+// FUNCTIONS
+
+
+inputAppearance()
+  -webkit-appearance none
+  -moz-appearance none
+  -ms-appearance none
+  -o-appearance none
+  appearance none
+
+
+// COMPONENTS
+
 
 body
   font-family 'Roboto', sans-serif
   background offwhite
 
 .header
-  background linear-gradient(315deg, #eec0c6 0%, #e58c8a 74%)
+  background linear-gradient(315deg, secondary 0%, primary 74%)
   color #fff
   font-size 20px
   position relative
@@ -47,3 +67,18 @@ body
     fill-opacity 1
     path
       vector-effect non-scaling-stroke
+
+.input
+  margin 40px 5px
+  width 100%
+  max-width 400px
+  &__field
+    background none
+    border-radius 0
+    width 100%
+    inputAppearance()
+    border none
+    border-bottom 1px solid secondary
+    &:focus
+      outline none
+      border-bottom 1px solid primary
