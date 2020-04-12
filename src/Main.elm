@@ -158,24 +158,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div [ class "header" ]
-            [ div [ class "header__display" ]
-                [ div [ class "header__score" ]
-                    [ roundToPlaces model.score 2
-                        |> (\n ->
-                                if n < 0 then
-                                    0
-
-                                else
-                                    n
-                           )
-                        |> String.fromFloat
-                        |> text
-                    ]
-                , div [ class "header__formula" ] [ text <| algoToName model.algorithm ]
-                ]
-            , viewWave
-            ]
+        [ viewHeader model.score model.algorithm
         , div [ class "section inputs" ]
             [ case model.units of
                 KG ->
@@ -209,26 +192,11 @@ view model =
                 Single ->
                     div []
                         (Dict.toList model.singleLifts
-                            |> List.map
-                                (\( name, val ) ->
-                                    input
-                                        [ placeholder name
-                                        , value val
-                                        , onInput (UpdateLift name)
-                                        ]
-                                        []
-                                )
+                            |> List.map (\( name, val ) -> viewInput name val (UpdateLift name))
                         )
 
                 Total ->
-                    div []
-                        [ input
-                            [ placeholder "Total"
-                            , value model.total
-                            , onInput UpdateTotal
-                            ]
-                            []
-                        ]
+                    div [] [ viewInput "Total" model.total UpdateTotal ]
             ]
         , div []
             [ text
@@ -242,15 +210,40 @@ view model =
         ]
 
 
-viewInput : String -> String -> (String -> msg) -> Html msg
+viewInput : String -> String -> (String -> Msg) -> Html Msg
 viewInput p v toMsg =
-    input
-        [ type_ "number"
-        , placeholder p
-        , value v
-        , onInput toMsg
+    div [ class "input" ]
+        [ input
+            [ type_ "number"
+            , class "input__field"
+            , placeholder p
+            , value v
+            , onInput toMsg
+            ]
+            []
         ]
-        []
+
+
+viewHeader : Float -> Algorithm -> Html Msg
+viewHeader score algorithm =
+    div [ class "header" ]
+        [ div [ class "header__display" ]
+            [ div [ class "header__score" ]
+                [ roundToPlaces score 2
+                    |> (\n ->
+                            if n < 0 then
+                                0
+
+                            else
+                                n
+                       )
+                    |> String.fromFloat
+                    |> text
+                ]
+            , div [ class "header__formula" ] [ algorithm |> algoToName |> text ]
+            ]
+        , viewWave
+        ]
 
 
 viewWave : Html Msg
