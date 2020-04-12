@@ -2,8 +2,8 @@ module Main exposing (main)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Html, button, div, input, option, select, text)
-import Html.Attributes exposing (class, classList, type_, value)
+import Html exposing (Html, button, div, input, label, option, select, text)
+import Html.Attributes exposing (class, classList, for, id, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
@@ -217,14 +217,16 @@ viewInput p v toMsg =
             [ type_ "number"
             , class "input__field"
             , value v
+            , id p
             , onInput toMsg
             ]
             []
-        , div
+        , label
             [ classList
                 [ ( "placeholder", True )
                 , ( "placeholder--filled", String.length v > 0 )
                 ]
+            , for p
             ]
             [ text p ]
         ]
