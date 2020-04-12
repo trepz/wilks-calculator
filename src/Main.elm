@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, label, option, select, text)
 import Html.Attributes exposing (class, classList, for, id, type_, value)
 import Html.Events exposing (onClick, onInput)
+import Html.Keyed as Keyed
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
 
@@ -190,13 +191,14 @@ view model =
             , viewInput "Bodyweight" model.bodyweight UpdateBodyweight
             , case model.mode of
                 Single ->
-                    div []
+                    Keyed.node "div"
+                        []
                         (Dict.toList model.singleLifts
-                            |> List.map (\( name, val ) -> viewInput name val (UpdateLift name))
+                            |> List.map (\( name, val ) -> ( name, viewInput name val (UpdateLift name) ))
                         )
 
                 Total ->
-                    div [] [ viewInput "Total" model.total UpdateTotal ]
+                    Keyed.node "div" [] [ ( "total", viewInput "Total" model.total UpdateTotal ) ]
             ]
         , div []
             [ text
