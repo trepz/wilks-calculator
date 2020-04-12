@@ -72,14 +72,26 @@ body
   margin 40px 5px
   width 100%
   max-width 400px
+  position relative
   &__field
+    inputAppearance()
     padding 5px
     background none
     border-radius 0
     width 100%
-    inputAppearance()
+    color #333
     border none
-    border-bottom 1px solid secondary
+    border-bottom 1px solid #999
     &:focus
       outline none
       border-bottom 1px solid primary
+  .placeholder
+    pointer-events none
+    position absolute
+    bottom 5px
+    left 5px
+    color #999
+    transition all 200ms
+    &--filled
+      bottom 30px
+      font-size 12px

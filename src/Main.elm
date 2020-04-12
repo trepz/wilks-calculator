@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, option, select, text)
-import Html.Attributes exposing (class, placeholder, type_, value)
+import Html.Attributes exposing (class, classList, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
@@ -72,7 +72,7 @@ init _ =
     ( { gender = Male
       , units = KG
       , algorithm = Wilks
-      , bodyweight = "90"
+      , bodyweight = ""
       , total = ""
       , singleLifts =
             Dict.fromList
@@ -216,11 +216,17 @@ viewInput p v toMsg =
         [ input
             [ type_ "number"
             , class "input__field"
-            , placeholder p
             , value v
             , onInput toMsg
             ]
             []
+        , div
+            [ classList
+                [ ( "placeholder", True )
+                , ( "placeholder--filled", String.length v > 0 )
+                ]
+            ]
+            [ text p ]
         ]
 
 
