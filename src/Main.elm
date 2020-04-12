@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, option, select, text)
-import Html.Attributes exposing (class, placeholder, value)
+import Html.Attributes exposing (class, placeholder, type_, value)
 import Html.Events exposing (onClick, onInput)
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
@@ -31,9 +31,9 @@ type alias Model =
     { gender : Gender
     , units : Units
     , algorithm : Algorithm
-    , bodyweight : Float
-    , total : Float
-    , singleLifts : Dict String Float
+    , bodyweight : String
+    , total : String
+    , singleLifts : Dict String String
     , score : Float
     , mode : Mode
     }
@@ -72,13 +72,13 @@ init _ =
     ( { gender = Male
       , units = KG
       , algorithm = Wilks
-      , bodyweight = 90
-      , total = 0
+      , bodyweight = "90"
+      , total = ""
       , singleLifts =
             Dict.fromList
-                [ ( "Squat", 0 )
-                , ( "Bench", 0 )
-                , ( "Deadlift", 0 )
+                [ ( "Squat", "" )
+                , ( "Bench", "" )
+                , ( "Deadlift", "" )
                 ]
       , score = 0
       , mode = Total
@@ -95,9 +95,9 @@ type Msg
     = UpdateGender Gender
     | UpdateUnits Units
     | UpdateAlgorithm Algorithm
-    | UpdateBodyweight Float
-    | UpdateTotal Float
-    | UpdateLift String Float
+    | UpdateBodyweight String
+    | UpdateTotal String
+    | UpdateLift String String
     | CalculateScore
     | UpdateMode Mode
 
@@ -141,8 +141,8 @@ update msg model =
                     computeScore
                         model.algorithm
                         model.gender
-                        (model.bodyweight |> convertWeight model.units KG)
-                        (modeTotal model |> convertWeight model.units KG)
+                        (model.bodyweight |> convertWeight model.units KG |> floatOrZero)
+                        (modeTotal model |> convertWeight model.units KG |> floatOrZero)
               }
             , Cmd.none
             )
@@ -174,7 +174,7 @@ view model =
                     ]
                 , div [ class "header__formula" ] [ text <| algoToName model.algorithm ]
                 ]
-            , wave
+            , viewWave
             ]
         , div [ class "section inputs" ]
             [ case model.units of
@@ -204,14 +204,7 @@ view model =
 
                 Total ->
                     button [ onClick (UpdateMode Single) ] [ text "Input: Individual Lifts" ]
-            ]
-        , div []
-            [ input
-                [ placeholder "Bodyweight"
-                , value (String.fromFloat model.bodyweight)
-                , onInput (UpdateBodyweight << floatOrZero)
-                ]
-                []
+            , viewInput "Bodyweight" model.bodyweight UpdateBodyweight
             , case model.mode of
                 Single ->
                     div []
@@ -220,8 +213,8 @@ view model =
                                 (\( name, val ) ->
                                     input
                                         [ placeholder name
-                                        , value (String.fromFloat val)
-                                        , onInput (UpdateLift name << floatOrZero)
+                                        , value val
+                                        , onInput (UpdateLift name)
                                         ]
                                         []
                                 )
@@ -231,8 +224,8 @@ view model =
                     div []
                         [ input
                             [ placeholder "Total"
-                            , value (String.fromFloat model.total)
-                            , onInput (UpdateTotal << floatOrZero)
+                            , value model.total
+                            , onInput UpdateTotal
                             ]
                             []
                         ]
@@ -240,7 +233,7 @@ view model =
         , div []
             [ text
                 (if model.mode == Single then
-                    "Total: " ++ String.fromFloat (modeTotal model)
+                    "Total: " ++ modeTotal model
 
                  else
                     ""
@@ -249,8 +242,19 @@ view model =
         ]
 
 
-wave : Html Msg
-wave =
+viewInput : String -> String -> (String -> msg) -> Html msg
+viewInput p v toMsg =
+    input
+        [ type_ "number"
+        , placeholder p
+        , value v
+        , onInput toMsg
+        ]
+        []
+
+
+viewWave : Html Msg
+viewWave =
     div [ class "wave" ]
         [ svg
             [ preserveAspectRatio "none", viewBox "0 0 100 100" ]
@@ -351,31 +355,40 @@ nameToAlgo name =
             Wilks
 
 
-modeTotal : Model -> Float
+modeTotal : Model -> String
 modeTotal model =
     case model.mode of
         Total ->
             model.total
 
         Single ->
-            model.singleLifts |> Dict.foldl (\_ n t -> n + t) 0
+            model.singleLifts
+                |> Dict.foldl (\_ n t -> floatOrZero n + t) 0
+                |> String.fromFloat
 
 
-convertWeight : Units -> Units -> Float -> Float
-convertWeight from to n =
-    if n == 0 then
-        0
+convertWeight : Units -> Units -> String -> String
+convertWeight from to stringN =
+    let
+        n =
+            floatOrZero stringN
 
-    else
-        case ( from, to ) of
-            ( LB, KG ) ->
-                roundToPlaces (n / 2.2046226218488) 2
+        m =
+            if n == 0 then
+                0
 
-            ( KG, LB ) ->
-                roundToPlaces (n * 2.2046226218488) 2
+            else
+                case ( from, to ) of
+                    ( LB, KG ) ->
+                        roundToPlaces (n / 2.2046226218488) 2
 
-            _ ->
-                n
+                    ( KG, LB ) ->
+                        roundToPlaces (n * 2.2046226218488) 2
+
+                    _ ->
+                        n
+    in
+    String.fromFloat m
 
 
 roundToPlaces : Float -> Float -> Float
