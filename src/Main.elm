@@ -382,23 +382,21 @@ convertWeight from to stringN =
     let
         n =
             floatOrZero stringN
-
-        m =
-            if n == 0 then
-                0
-
-            else
-                case ( from, to ) of
-                    ( LB, KG ) ->
-                        roundToPlaces (n / 2.2046226218488) 2
-
-                    ( KG, LB ) ->
-                        roundToPlaces (n * 2.2046226218488) 2
-
-                    _ ->
-                        n
     in
-    String.fromFloat m
+    if n == 0 then
+        ""
+
+    else
+        String.fromFloat <|
+            case ( from, to ) of
+                ( LB, KG ) ->
+                    roundToPlaces (n / 2.2046226218488) 2
+
+                ( KG, LB ) ->
+                    roundToPlaces (n * 2.2046226218488) 2
+
+                _ ->
+                    n
 
 
 roundToPlaces : Float -> Float -> Float
