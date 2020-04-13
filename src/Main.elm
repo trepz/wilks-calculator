@@ -161,18 +161,16 @@ view model =
     div []
         [ viewHeader model.score model.algorithm
         , div [ class "section inputs" ]
-            [ case model.units of
-                KG ->
-                    button [ onClick (UpdateUnits LB) ] [ text "KG" ]
-
-                LB ->
-                    button [ onClick (UpdateUnits KG) ] [ text "LBS" ]
-            , case model.gender of
-                Male ->
-                    button [ onClick (UpdateGender Female) ] [ text "Male" ]
-
-                Female ->
-                    button [ onClick (UpdateGender Male) ] [ text "Female" ]
+            [ div
+                [ class "gender-select" ]
+                [ viewTextCheckbox "M" (model.gender == Male) (UpdateGender Male)
+                , viewTextCheckbox "F" (model.gender == Female) (UpdateGender Female)
+                ]
+            , div
+                [ class "units-select" ]
+                [ viewTextCheckbox "KG" (model.units == KG) (UpdateUnits KG)
+                , viewTextCheckbox "LBS" (model.units == LB) (UpdateUnits LB)
+                ]
             , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
                 ([ Wilks, IPF, OldWilks ]
                     |> List.map
@@ -275,6 +273,15 @@ viewWave =
                 []
             ]
         ]
+
+
+viewTextCheckbox : String -> Bool -> Msg -> Html Msg
+viewTextCheckbox t c toMsg =
+    div
+        [ classList [ ( "checkbox", True ), ( "checkbox--checked", c ) ]
+        , onClick toMsg
+        ]
+        [ text t ]
 
 
 
