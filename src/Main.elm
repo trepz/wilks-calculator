@@ -170,7 +170,7 @@ view model =
                     ]
                 , div [ class "checkbox-container checkbox-container--right" ]
                     [ viewTextCheckbox "KG" (model.units == KG) (UpdateUnits KG)
-                    , viewTextCheckbox "LBS" (model.units == LB) (UpdateUnits LB)
+                    , viewTextCheckbox "LB" (model.units == LB) (UpdateUnits LB)
                     ]
                 ]
             , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
