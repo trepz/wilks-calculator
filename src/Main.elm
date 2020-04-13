@@ -375,7 +375,7 @@ modeTotal model =
 
         Single ->
             model.singleLifts
-                |> Dict.foldl (\_ n t -> floatOrZero n + t) 0
+                |> Dict.foldl (\_ -> (+) << floatOrZero) 0
                 |> String.fromFloat
 
 
