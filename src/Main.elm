@@ -162,14 +162,16 @@ view model =
         [ viewHeader model.score model.algorithm
         , div [ class "section inputs" ]
             [ div
-                [ class "gender-select" ]
-                [ viewTextCheckbox "M" (model.gender == Male) (UpdateGender Male)
-                , viewTextCheckbox "F" (model.gender == Female) (UpdateGender Female)
-                ]
-            , div
-                [ class "units-select" ]
-                [ viewTextCheckbox "KG" (model.units == KG) (UpdateUnits KG)
-                , viewTextCheckbox "LBS" (model.units == LB) (UpdateUnits LB)
+                [ class "checkbox-container" ]
+                [ div
+                    [ class "checkbox-container" ]
+                    [ viewTextCheckbox "M" (model.gender == Male) (UpdateGender Male)
+                    , viewTextCheckbox "F" (model.gender == Female) (UpdateGender Female)
+                    ]
+                , div [ class "checkbox-container checkbox-container--right" ]
+                    [ viewTextCheckbox "KG" (model.units == KG) (UpdateUnits KG)
+                    , viewTextCheckbox "LBS" (model.units == LB) (UpdateUnits LB)
+                    ]
                 ]
             , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
                 ([ Wilks, IPF, OldWilks ]

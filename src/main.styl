@@ -100,5 +100,15 @@ body
 .checkbox
   cursor pointer
   color #999
+  font-size 20px
+  padding 10px
   &--checked
     color primary
+
+.checkbox-container
+  display flex
+  flex-direction row
+  >.checkbox-container
+    flex 0.5
+  &--right
+    justify-content flex-end 
