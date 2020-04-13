@@ -478,4 +478,8 @@ computeScore algo gender bodyweight total =
                         Female ->
                             { a = 125.1435, b = 228.03, c = 34.5246, d = 86.8301 }
             in
-            500 + 100 * (total - (a * ln w - b)) / (c * ln w - d)
+            if w == 0 then
+                0
+
+            else
+                500 + 100 * (total - (a * ln w - b)) / (c * ln w - d)
