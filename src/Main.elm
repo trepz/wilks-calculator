@@ -162,15 +162,15 @@ view model =
         [ viewHeader model.score model.algorithm
         , div [ class "section inputs" ]
             [ div
-                [ class "checkbox-container" ]
+                [ class "radio-container" ]
                 [ div
-                    [ class "checkbox-container" ]
-                    [ viewTextCheckbox "M" (model.gender == Male) (UpdateGender Male)
-                    , viewTextCheckbox "F" (model.gender == Female) (UpdateGender Female)
+                    [ class "radio-container" ]
+                    [ viewTextRadio "M" (model.gender == Male) (UpdateGender Male)
+                    , viewTextRadio "F" (model.gender == Female) (UpdateGender Female)
                     ]
-                , div [ class "checkbox-container checkbox-container--right" ]
-                    [ viewTextCheckbox "KG" (model.units == KG) (UpdateUnits KG)
-                    , viewTextCheckbox "LB" (model.units == LB) (UpdateUnits LB)
+                , div [ class "radio-container radio-container--right" ]
+                    [ viewTextRadio "KG" (model.units == KG) (UpdateUnits KG)
+                    , viewTextRadio "LB" (model.units == LB) (UpdateUnits LB)
                     ]
                 ]
             , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
@@ -277,10 +277,10 @@ viewWave =
         ]
 
 
-viewTextCheckbox : String -> Bool -> Msg -> Html Msg
-viewTextCheckbox t c toMsg =
+viewTextRadio : String -> Bool -> Msg -> Html Msg
+viewTextRadio t c toMsg =
     div
-        [ classList [ ( "checkbox", True ), ( "checkbox--checked", c ) ]
+        [ classList [ ( "radio", True ), ( "radio--checked", c ) ]
         , onClick toMsg
         ]
         [ text t ]
