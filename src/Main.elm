@@ -286,7 +286,7 @@ viewTextRadio t c toMsg =
         , on "keydown" <|
             D.andThen
                 (\key ->
-                    if key == 13 then
+                    if List.any ((==) key) [ 13, 32 ] then
                         D.succeed toMsg
 
                     else
