@@ -3,9 +3,10 @@ module Main exposing (main)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, input, label, option, select, text)
-import Html.Attributes exposing (class, classList, for, id, type_, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Attributes exposing (class, classList, for, id, tabindex, type_, value)
+import Html.Events exposing (on, onClick, onInput)
 import Html.Keyed as Keyed
+import Json.Decode as D
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, preserveAspectRatio, viewBox)
 
@@ -282,6 +283,17 @@ viewTextRadio t c toMsg =
     div
         [ classList [ ( "radio", True ), ( "radio--checked", c ) ]
         , onClick toMsg
+        , on "keydown" <|
+            D.andThen
+                (\key ->
+                    if key == 13 then
+                        D.succeed toMsg
+
+                    else
+                        D.fail ""
+                )
+                (D.field "keyCode" D.int)
+        , tabindex 0
         ]
         [ text t ]
 
