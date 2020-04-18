@@ -160,7 +160,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ viewHeader model.score model.algorithm
+        [ viewHeader model.score
         , div [ class "section inputs" ]
             [ div
                 [ class "radio-container" ]
@@ -174,21 +174,6 @@ view model =
                     , viewTextRadio "LB" (model.units == LB) (UpdateUnits LB)
                     ]
                 ]
-            , select [ onInput (UpdateAlgorithm << nameToAlgo) ]
-                ([ Wilks, IPF, OldWilks ]
-                    |> List.map
-                        (\f ->
-                            option
-                                [ value (algoToName f) ]
-                                [ text (algoToName f) ]
-                        )
-                )
-            , case model.mode of
-                Single ->
-                    button [ onClick (UpdateMode Total) ] [ text "Input: Total" ]
-
-                Total ->
-                    button [ onClick (UpdateMode Single) ] [ text "Input: Individual Lifts" ]
             , viewInput "Bodyweight" model.bodyweight UpdateBodyweight
             , case model.mode of
                 Single ->
@@ -200,6 +185,12 @@ view model =
 
                 Total ->
                     Keyed.node "div" [] [ ( "total", viewInput "Total" model.total UpdateTotal ) ]
+            , case model.mode of
+                Single ->
+                    button [ onClick (UpdateMode Total) ] [ text "Input: Total" ]
+
+                Total ->
+                    button [ onClick (UpdateMode Single) ] [ text "Input: Individual Lifts" ]
             ]
         , div []
             [ text
@@ -235,8 +226,8 @@ viewInput p v toMsg =
         ]
 
 
-viewHeader : Float -> Algorithm -> Html Msg
-viewHeader score algorithm =
+viewHeader : Float -> Html Msg
+viewHeader score =
     div [ class "header" ]
         [ div [ class "header__display" ]
             [ div [ class "header__score" ]
@@ -251,7 +242,17 @@ viewHeader score algorithm =
                     |> String.fromFloat
                     |> text
                 ]
-            , div [ class "header__formula" ] [ algorithm |> algoToName |> text ]
+            , div [ class "header__formula" ]
+                [ select [ onInput (UpdateAlgorithm << nameToAlgo) ]
+                    ([ Wilks, IPF, OldWilks ]
+                        |> List.map
+                            (\f ->
+                                option
+                                    [ value (algoToName f) ]
+                                    [ text (algoToName f) ]
+                            )
+                    )
+                ]
             ]
         , viewWave
         ]
